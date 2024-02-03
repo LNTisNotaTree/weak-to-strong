@@ -18,24 +18,31 @@ def main(model_sizes: Union[List[str], str], **kwargs):
     for key, value in kwargs.items():
         basic_args.extend([f"--{key}", str(value)])
 
-    '''
+    delete_script = "./delete.sh"
+    upload_script = "./upload.sh"
+    
     print("Running ground truth models")
     for model_size in model_sizes:
         subprocess.run(basic_args + ["--model_size", model_size], check=True)
-
-    '''
+        subprocess.run([delete_script],shell=true,check=true)
+        #delete after_training model weights
+    
     print("Running transfer models")
     for i in range(len(model_sizes)):
         for j in range(i, len(model_sizes)):
-            if(i!=0 or j==len(model_sizes)-1):
-                weak_model_size = model_sizes[i]
-                strong_model_size = model_sizes[j]
-                print(f"Running weak {weak_model_size} to strong {strong_model_size}")
-                subprocess.run(
-                    basic_args
-                    + ["--weak_model_size", weak_model_size, "--model_size", strong_model_size],
-                    check=True,
-                )
+            weak_model_size = model_sizes[i]
+            strong_model_size = model_sizes[j]
+            print(f"Running weak {weak_model_size} to strong {strong_model_size}")
+            subprocess.run(
+                basic_args
+                + ["--weak_model_size", weak_model_size, "--model_size", strong_model_size],
+                check=True,
+            )
+            subprocess.run([delete_script],shell=true,check=true)
+            #delete after_training model weights
+
+    subprocess.run([upload_script],shell=true,check=true)
+  
     
     
 
