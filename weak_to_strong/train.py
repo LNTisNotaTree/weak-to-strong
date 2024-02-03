@@ -17,6 +17,7 @@ from weak_to_strong.eval import eval_model_acc
 from weak_to_strong.loss import xent_loss
 from weak_to_strong.model import TransformerWithHead
 
+from weak_to_strong.loss import logconf_loss_fn
 
 @dataclass
 class ModelConfig:
@@ -34,7 +35,8 @@ def train_model(
     ds: datasets.Dataset,
     batch_size: int,
     lr: float = 1e-5,
-    loss_fn: Callable = xent_loss,
+    #loss_fn: Callable = xent_loss,
+    loss_fn: Callable = logconf_loss_fn,
     log_every: int = 10,
     eval_every: int = 100,
     eval_batch_size: int = 256,
@@ -176,7 +178,8 @@ def train_and_save_model(
     eval_batch_size: Optional[int] = None,
     minibatch_size_per_device: Optional[int] = None,
     save_path: Optional[str] = None,
-    loss_fn: Callable = xent_loss,
+    #loss_fn: Callable = xent_loss,
+    loss_fn: Callable = logconf_loss_fn,
     label: str = "default",
     force_retrain: bool = False,
     train_with_dropout: bool = False,
